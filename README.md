@@ -1,4 +1,4 @@
-# Torch-Lua-Learning-Notes
+# Torch/Lua Learning Notes
 ***
 ### 1. local 
 **local** 关键字非常重要，在一个程序段中(测试/模块)， **变量建议都设为局部变量**(加上 **local** 关键字)，否则可能会出现很多莫名其妙的错误。
@@ -43,6 +43,9 @@ print(num)
 - **nn.Narrow(dim, start_index, size)(InputTensor)**
   - 输出InputTensor的第dim维的tensor，tensor的起始下标是start_index，长度为size。
   - e.g. 取一个二维tensor的第二行 <=> nn.Narrow(1, 2, 1)(tensor)
+- **nn.Linear(InputDim, OutputDim)(InputTensor)**
+  - nn中的全连接层,InputDim和OutputDim分别表示输入输出Tensor的维度。InputTensor只能是1-D vector 或者2-D matrix。一般情况下，InputTensor是1-D，返回的结果是1-D tensor，维度是Outputdim。
+  - **但是**， 当**InputTensor是2-D**时，默认是将tensor中的**每行视为batch中的一个样本**，以batch的形式输入输出，记tensor size为**rows * InputDim**，则**输出的结果是2-D tensor**，size是**rows * OutputDim**
 
 
 ### 3. Torch functions
@@ -54,3 +57,10 @@ print(num)
 
 - **split(tensor, size, [dim])**
   - 输出大小为size的tensors，tensors是沿着维度dim对tensor分割得到的。dim默认是1。
+  
+***
+
+### 4. Some tips in Torch
+- data是一个N维tensor, 若要访问第k维的数据块，可以这样进行：
+  - data[{{},...,{start_index, end_index}, ...,{}}]
+  - start_index 和 end_index 分别表示第k维数据块的起止index
